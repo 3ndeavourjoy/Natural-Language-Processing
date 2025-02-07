@@ -3,6 +3,8 @@ import time
 import re
 import math
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 driver = webdriver.Edge()
 
@@ -11,40 +13,47 @@ save_dict = {}
 driver.get("https://www.daraz.com.bd/routers/?page=1")
 driver.maximize_window()
 
-# Get the total number of pages through the website sentence
-total_number_page = driver.find_element(
-    By.CSS_SELECTOR,'#root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div.xYcXp > div > div.Ck3Nt > div > div > span:nth-child(1)').text
+# Get total number of products and calculate pages
+wait = WebDriverWait(driver, 15)
+total_number_text = wait.until(EC.presence_of_element_located(
+    (By.CSS_SELECTOR, 'div.Ck3Nt > div > div > span:nth-child(1)')
+)).text
 
-# Extracting total number of pages from the text through regular expression
-numbers = int(re.findall(r'\d+', total_number_page)[0])
-total_page = math.ceil(numbers / 40)
-print(total_page)
+# Extract total number of products
+total_products = int(re.findall(r'\d+', total_number_text)[0])
+total_pages = math.ceil(total_products / 40)
+print(f"Total Products: {total_products}, Total Pages: {total_pages}")
 
 # Loop through each page
-for page_no in range(1,total_page+1):
+for page_no in range(1, total_pages + 1):
     driver.get(f"https://www.daraz.com.bd/routers/?page={page_no}")
-    time.sleep(5)  # Wait for the page to load
+    time.sleep(5)  # Small delay for page load
 
-    # List to store product links for the current page
+    # Get all product elements dynamically
+    product_elements = driver.find_elements(By.CSS_SELECTOR, "div._17mcb > div")
+    print(f"Page {page_no} - Found {len(product_elements)} products")
+
     product_links = []
     
-    # Loop through the products on the current page
-    for prod in range(1,41):
-        type_i = str(prod)
-        link = driver.find_element(
-            By.CSS_SELECTOR,f'#root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child({type_i}) > div > div > div.ICdUp > div > a').get_attribute('href')
-        product_links.append(link)
+    # Loop through available products only
+    for prod_index, product in enumerate(product_elements, start=1):
+        try:
+            link_element = product.find_element(By.CSS_SELECTOR, "div.ICdUp > div > a")
+            link = link_element.get_attribute("href")
+            product_links.append(link)
+        except Exception as e:
+            print(f"Skipping product {prod_index} on page {page_no} due to error: {e}")
 
-    # Add the current page's product links to the dictionary
+    # Store results in dictionary
     save_dict[f"page_{page_no}"] = product_links
 
-# This is one of the main task of the assignment to print the dictionary with page no and links each respectively
+# Print extracted product links
 for page, links in save_dict.items():
     print(f"{page}: {', '.join(links)}")
 
-# Print the total number of products scraped
+# Print total scraped product count
 total_links = sum(len(links) for links in save_dict.values())
 print(f"Total products scraped: {total_links}")
 
-time.sleep(30)
+time.sleep(5)
 driver.quit()
