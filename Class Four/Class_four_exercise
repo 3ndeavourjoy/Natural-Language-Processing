@@ -1,0 +1,26 @@
+from selenium import webdriver
+import time
+import urllib.request
+from selenium.webdriver.common.by import By
+from selenium.webdriver.edge.options import Options
+
+#solution to the cache issue
+edge_options = Options()
+edge_options.add_argument("--disable-cache")
+edge_options.add_argument("--incognito")
+driver = webdriver.Edge(options=edge_options)
+#driver = webdriver.Edge()
+
+driver.maximize_window()
+driver.get('https://www.daraz.com.bd/products/mercusys-mw330hp-300mbps-i261659893.html?spm=a2a0e.searchlistcategory.list.14.26813d8ffahOX4')
+
+height = driver.execute_script('return document.body.scrollHeight')
+
+for i in range(0,height+1500,30):
+    driver.execute_script(f'window.scrollTo(0,{i});')
+    time.sleep(0.5)
+
+time.sleep(10)
+driver.quit()
+
+
