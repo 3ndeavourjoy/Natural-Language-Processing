@@ -1,0 +1,38 @@
+Keywords:Event,Clickevent,Pagination Pattern,Rendering Pagination/SinglePage Pagination, Optimized Design(How daraz did with the pages)
+
+
+Practice: Find pattern of xpath in the given link.[Daraz Pagination Pattern]
+
+Info: They maintain pattern from 1 to 4 like 1,2,3,4 so before 4 it maintains serial but after that it gets dynamic. The repeating starts after 4 in daraz.
+
+Link: https://www.daraz.com.bd/products/lte-wifi-150-mbps-usb-i331927284.html?spm=a2a0e.searchlistcategory.list.12.6a113d8fM6OEMT
+
+b1 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[1]
+b2 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[2]
+b3 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[3]
+b4 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4]
+b5 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4] (tapped from b4)
+b6 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4] (tapped from b5)
+b7 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4]
+b8 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4]
+b9 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4]
+b10 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[4]
+b11 -//*[@id="module_product_review"]/div/div/div[3]/div[2]/div/div/button[5]
+
+
+Q. How many times 4 is occuring in the patteren and when?
+
+
+Salman Bhai Perspective(1:08:00): 
+
+1.Find the last value (comments/5)
+2.If it is 1,2,3,4......10 then 10-4 = 6 where 4 will appear six times.
+3.The logic is implemented with code in the github repository.
+
+
+
+
+Two things are learned from this class: 
+i.Brainstorming solutions for problems
+ii.Team work approach
+iii.Critical Thinking to improve problem solving ability.
